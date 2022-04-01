@@ -180,7 +180,7 @@ export default {
     LabIntroduce,
     AddLab,
     ChangePwd,
-    // 安全模块111
+    // 安全模块
     SecurityModule,
     SecurityModuleDetail,
     InspectionManagement,
