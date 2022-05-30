@@ -752,3 +752,11 @@ body { background: #f5f6fa; font-size: 12px; overflow-x: hidden; color: #333333;
 .tacticalManagementPage .title .span-l { float: left; margin: 8px 0 0 0; font-size: 16px; line-height: 16px; color: #409EFF; font-weight: 700; border-left: 3px solid #409EFF; padding: 0 0 0 10px; }
 .tacticalManagementPage .title .button { float: right; margin: 10px 20px 0 0; }
 .tacticalManagementPage .triangle { position: absolute; right: 0; top: 0; width: 50px; height: 50px; }
+/*warehouseManagementPage*/
+.warehouseManagementPage { background: #ffffff; border-radius: 10px; padding: 20px; }
+.warehouseManagementPage .title { width: 100%; }
+.warehouseManagementPage .title .span-l { float: left; margin: 8px 0 0 0; font-size: 16px; line-height: 16px; color: #409EFF; font-weight: 700; border-left: 3px solid #409EFF; padding: 0 0 0 10px; }
+.warehouseManagementPage .title .button { float: right; }
+.warehouseManagementPage .materialList h2 { font-size: 16px; font-weight: 700;  margin: 20px 0; }
+.warehouseManagementPage .materialList h2 i { margin: 0 10px 0 0; }
+.warehouseManagementPage .materialList .materialList-title { display: flex; justify-content: space-between; align-items: flex-start; }

@@ -3,31 +3,25 @@
     <div class="title">
       <span class="span-l">仓库查看</span>
       <div class="button">
-        <el-button type="primary" plain size="small" @click="getSuppliesData()">刷新</el-button>
-        <el-button type="primary" plain size="small" @click="addSuppliesModalShow('add')">添加</el-button>
-        <el-button type="primary" plain size="small" @click="addSuppliesModalShow('updata')">编辑</el-button>
-        <el-button type="primary" plain size="small" @click="batchOperate('delete')">删除</el-button>
-        <el-button type="primary" plain size="small" @click="batchOperate('export')">导出</el-button>
+        <el-button type="primary" size="small">下载模板</el-button>
+<!--        <el-button type="primary" plain size="small" @click="addSuppliesModalShow('add')">添加</el-button>-->
+<!--        <el-button type="primary" plain size="small" @click="addSuppliesModalShow('updata')">编辑</el-button>-->
+<!--        <el-button type="primary" plain size="small" @click="batchOperate('delete')">删除</el-button>-->
+        <el-button type="primary" size="small" @click="batchOperate('export')">导入</el-button>
+        <el-button type="primary" size="small" @click="batchOperate('export')">导出</el-button>
       </div>
       <div class="clearfix"></div>
     </div>
     <div class="search margin-t-10">
       <el-form label-width="80px" :model="getSuppliesDataForm">
-        <el-form-item label="物料类型" class="fl w-15" prop="type">
-          <el-select v-model="getSuppliesDataForm.type" size="small" placeholder="请选择">
+        <el-form-item label="物料类型" class="fl" prop="materialTypeId">
+          <el-select v-model="getSuppliesDataForm.materialTypeId" size="small" placeholder="请选择">
             <el-option label="全部" value=""></el-option>
-            <el-option label="消耗品" :value="1"></el-option>
-            <el-option label="非消耗品" :value="2"></el-option>
+            <el-option v-for="item in materialTypeList" :key="item.id" :label="item.materialTypeName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="名称" class="fl w-30" prop="name">
-          <el-input placeholder="请输入名称" size="small" v-model="getSuppliesDataForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="状态" class="fl w-15" prop="status">
-          <el-select v-model="getSuppliesDataForm.status" size="small" placeholder="请选择">
-            <el-option label="全部" value=""></el-option>
-            <el-option v-for="item in suppliesStatusList" :key="item.id" :label="item.label" :value="item.value"></el-option>
-          </el-select>
+        <el-form-item label="物料名称" class="fl" prop="materialName">
+          <el-input placeholder="请输入物料名称" size="small" v-model="getSuppliesDataForm.materialName"></el-input>
         </el-form-item>
         <el-button type="primary" icon="el-icon-search" class="fl" size="small" style="margin: 5px 0 0 20px;" @click="getSuppliesData">查询</el-button>
         <div class="clearfix"></div>
@@ -80,8 +74,8 @@
     data () {
       return {
         getSuppliesDataForm: {
-          type: '',
-          name: '',
+          materialTypeId: '',
+          materialName: '',
           status: '',
           current: 0,
           size: 10
@@ -106,7 +100,8 @@
         'currentMenu',
         'suppliesStatusList',
         'unitList',
-        'suppliesSafeTypeList'
+        'suppliesSafeTypeList',
+        'materialTypeList'
       ])
     },
     created () {

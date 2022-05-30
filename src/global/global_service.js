@@ -47,12 +47,8 @@ class GlobalService extends Vue {
           // console.log(res.data);
           if (res.data.status === 1) {
             resolve(res);
-          } else if (res.data.status === 8001) {
-            vm.$alert(res.data.msg, '温馨提示', {
-              confirmButtonText: '确定'
-            });
           } else {
-            vm.$alert('系统异常请联系管理员', '温馨提示', {
+            vm.$alert(res.data.msg, '温馨提示', {
               confirmButtonText: '确定'
             });
           }

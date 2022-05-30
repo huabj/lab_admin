@@ -51,7 +51,8 @@ const store = new Vuex.Store({
         value: 3,
         label: '最近半年'
       }
-    ]
+    ],
+    materialTypeList: []
   },
   getters: {
   },
@@ -97,6 +98,9 @@ const store = new Vuex.Store({
     },
     saveLabEquTypeList (state, labEquTypeList) {
       state.labEquTypeList = labEquTypeList;
+    },
+    saveMaterialTypeList (state, materialTypeList) {
+      state.materialTypeList = materialTypeList;
     }
   },
   actions: {

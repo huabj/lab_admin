@@ -148,7 +148,7 @@ class Service extends GlobalService {
   }
   // 物料查询
   supplies (getSuppliesDataForm) {
-    return this.GET(Config.POST_URL + '/api/supplies', getSuppliesDataForm);
+    return this.GET(Config.POST_URL + '/api/materialInventoryMessage', getSuppliesDataForm);
   }
   // 物料删除接口
   deleteSupplies (list) {
@@ -295,5 +295,41 @@ class Service extends GlobalService {
   getLaboratoryList () {
     return this.GET(Config.POST_URL + '/api/laboratory/list');
   }
-};
+  // 仓库管理初始化查询，条件查询（物料类型、物料名称）
+  materialList () {
+    return this.GET(Config.POST_URL + '/api/material');
+  }
+  // 物料类型下拉框查询
+  materialTypeList () {
+    return this.GET(Config.POST_URL + '/api/materialType');
+  }
+  // 添加物料类型
+  addMaterialType (addForm) {
+    return this.POST(Config.POST_URL + '/api/materialType', addForm);
+  }
+  // 物料类型编辑
+  editMaterialType (addForm) {
+    return this.PUT(Config.POST_URL + '/api/materialType', addForm);
+  }
+  // 物料添加
+  addMaterial (addForm) {
+    return this.POST(Config.POST_URL + '/api/material', addForm);
+  }
+  // 物料编辑
+  editMaterial (addForm) {
+    return this.PUT(Config.POST_URL + '/api/material', addForm);
+  }
+  // 下载模板
+  downloadMaterial () {
+    return this.GET(Config.POST_URL + '/api/material/download');
+  }
+  // 模板导入
+  uploadMaterial (formData, config) {
+    return this.POST(Config.POST_URL + '/api/material/upload', formData, config);
+  }
+  // 物料数据导出
+  downloadMaterialData () {
+    return this.GET(Config.POST_URL + '/api/material/downloadMaterialData');
+  }
+}
 export default Service.getInstance();

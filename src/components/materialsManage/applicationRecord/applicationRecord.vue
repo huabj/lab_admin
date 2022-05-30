@@ -1,7 +1,7 @@
 <template>
   <div class="applicationRecordPage">
     <div class="title">
-      <span class="span-l">申请记录</span>
+      <span class="span-l">申请档案</span>
       <div class="button flex">
         <el-button type="primary" size="small" @click="applicationMaterialsModalShow()">物料申请</el-button>
         <el-button type="primary" size="small" @click="batchOperate('delete')">批量删除</el-button>

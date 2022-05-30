@@ -102,6 +102,7 @@ import LookLab from './labDataVis/lookLab/lookLab.vue';
 import LabManager from './labDataVis/labManager/labManager.vue';
 // 物料管理
 import LookWarehouse from './materialsManage/lookWarehouse/lookWarehouse.vue';
+import WarehouseManagement from './materialsManage/warehouseManagement/warehouseManagement.vue';
 import StockIn from './materialsManage/stockIn/stockIn.vue';
 import StockOut from './materialsManage/stockOut/stockOut.vue';
 import WarehouseVis from './materialsManage/warehouseVis/warehouseVis.vue';
@@ -161,6 +162,7 @@ export default {
     LabManager,
     // 物料管理
     LookWarehouse,
+    WarehouseManagement,
     StockIn,
     StockOut,
     WarehouseVis,
@@ -256,6 +258,9 @@ export default {
         },
         {
           name: 'lookWarehouse'
+        },
+        {
+          name: 'warehouseManagement'
         },
         {
           name: 'stockIn'
@@ -409,6 +414,11 @@ export default {
       this.$Service.dictDetail('laboratory_equipment_type').then(function (res) {
         if (res.data.data !== undefined) {
           vm.$store.commit('saveLabEquTypeList', res.data.data.laboratory_equipment_type);
+        }
+      });
+      this.$Service.materialTypeList().then(function (res) {
+        if (res.data.data !== undefined) {
+          vm.$store.commit('saveMaterialTypeList', res.data.data);
         }
       });
     },
