@@ -4,73 +4,71 @@
       <span class="span-l">出库单</span>
       <div class="button">
         <el-button type="primary" plain size="small" @click="getSuppliesData()">刷新</el-button>
-        <el-button type="primary" plain size="small" @click="batchOperate('delete')">删除</el-button>
+<!--        <el-button type="primary" plain size="small" @click="batchOperate('delete')">删除</el-button>-->
         <el-button type="primary" plain size="small" @click="batchOperate('export')">导出</el-button>
       </div>
       <div class="clearfix"></div>
     </div>
     <div class="search margin-t-10">
       <el-form label-width="80px" :model="getSuppliesDataForm">
-        <el-form-item label="物料类型" class="fl w-15" prop="type">
-          <el-select v-model="getSuppliesDataForm.type" size="small" placeholder="请选择">
+        <el-form-item label="物料类型" class="fl" prop="materialTypeId">
+          <el-select v-model="getSuppliesDataForm.materialTypeId" size="small" placeholder="请选择">
             <el-option label="全部" value=""></el-option>
-            <el-option label="消耗品" :value="1"></el-option>
-            <el-option label="非消耗品" :value="2"></el-option>
+            <el-option v-for="item in materialTypeList" :key="item.id" :label="item.materialTypeName" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="名称" class="fl w-30" prop="name">
-          <el-input placeholder="请输入名称" size="small" v-model="getSuppliesDataForm.name"></el-input>
+        <el-form-item label="物料名称" class="fl" prop="materialName">
+          <el-input placeholder="请输入物料名称" size="small" v-model="getSuppliesDataForm.materialName"></el-input>
         </el-form-item>
         <el-button type="primary" icon="el-icon-search" class="fl" size="small" style="margin: 5px 0 0 20px;" @click="getSuppliesData">查询</el-button>
         <div class="clearfix"></div>
       </el-form>
     </div>
     <div class="margin-t-20">
-      <el-table :data="suppliesData.records" ref="multipleTable" class="w-100" @selection-change="handleSelectionChange">
+      <el-table :data="suppliesData" ref="multipleTable" class="w-100" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="typeName" label="物料类型"></el-table-column>
-        <el-table-column prop="storageNumber" label="仓库编号"></el-table-column>
-        <el-table-column prop="warehouseNumber" label="货架编号"></el-table-column>
-        <el-table-column prop="number" label="物料编号"></el-table-column>
-        <el-table-column prop="name" label="物料名称"></el-table-column>
-        <el-table-column prop="quantity" label="数量"></el-table-column>
-        <el-table-column prop="unitName" label="单位"></el-table-column>
-        <el-table-column label="有效期" width="290">
-          <template slot-scope="scope">{{scope.row.startTime}}&nbsp;&nbsp;至&nbsp;&nbsp;{{scope.row.endTime}}</template>
+        <el-table-column prop="materialTypeName" label="物料类型"></el-table-column>
+        <el-table-column prop="materialName" label="物料名称"></el-table-column>
+        <el-table-column prop="wareHouseNumber" label="仓库编号"></el-table-column>
+        <el-table-column prop="shelvesNumber" label="货架编号"></el-table-column>
+        <el-table-column prop="outputCount" label="出库数量"></el-table-column>
+        <el-table-column prop="unit" label="单位"></el-table-column>
+        <el-table-column prop="createName" label="操作人员"></el-table-column>
+        <el-table-column prop="limitType" label="有效期限">
+          <!--有效期类型（1：限期 2：长期-->
+          <template slot-scope="scope">
+            <span v-if="scope.row.limitType === 1">{{scope.row.limitTime}}</span>
+            <span v-if="scope.row.limitType === 2">长期</span>
+          </template>
         </el-table-column>
-        <el-table-column prop="safeTypeName" label="安全系数"></el-table-column>
+        <el-table-column prop="quantity" label="出库性质"></el-table-column>
+        <el-table-column prop="createTime" label="出库时间"></el-table-column>
       </el-table>
-      <div class="pages">
-        <el-pagination @current-change="handleCurrentChange" :current-page.sync="getSuppliesDataForm.current" :page-size="getSuppliesDataForm.size" layout="prev, pager, next, jumper" :total="totalPages"></el-pagination>
-      </div>
+<!--      <div class="pages">-->
+<!--        <el-pagination @current-change="handleCurrentChange" :current-page.sync="getSuppliesDataForm.current" :page-size="getSuppliesDataForm.size" layout="prev, pager, next, jumper" :total="totalPages"></el-pagination>-->
+<!--      </div>-->
     </div>
   </div>
 </template>
 
 <script>
+  import {mapState} from 'vuex';
   export default {
     name: 'stockOut',
     data () {
       return {
         getSuppliesDataForm: {
-          type: '',
-          name: '',
-          status: 2,
-          current: 0,
-          size: 10
+          materialTypeId: '',
+          materialName: ''
         },
-        totalPages: 1,
-        suppliesData: {
-          current: 1,
-          orders: [],
-          pages: 1,
-          records: [],
-          searchCount: true,
-          size: 10,
-          total: 3
-        },
+        suppliesData: [],
         batchList: []
       };
+    },
+    computed: {
+      ...mapState([
+        'materialTypeList'
+      ])
     },
     created () {
       this.getSuppliesData();
@@ -84,10 +82,10 @@
       // 获取列表
       getSuppliesData () {
         let vm = this;
-        this.$Service.supplies(this.getSuppliesDataForm).then(function (res) {
+        this.$Service.materialInventoryOutputList(this.getSuppliesDataForm).then(function (res) {
           if (res.data.data !== undefined) {
             vm.suppliesData = res.data.data;
-            vm.totalPages = vm.suppliesData.total;
+            // vm.totalPages = vm.suppliesData.total;
           }
         });
       },

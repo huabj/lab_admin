@@ -25,7 +25,7 @@
         <div class="clearfix"></div>
       </el-form>
     </div>
-    <div class="materialList" v-for="item in materialList" :key="item.id">
+    <div class="materialList" v-for="item in list" :key="item.id">
       <div class="materialList-title">
         <h2><i class="el-icon-caret-bottom"></i>{{item.materialTypeName}}</h2>
         <div>
@@ -95,7 +95,7 @@ export default {
         materialTypeId: '',
         materialName: ''
       },
-      materialList: [],
+      list: [],
       passInfo: {},
       addMaterialTypeModal: false,
       addMaterialModal: false,
@@ -286,7 +286,7 @@ export default {
       let vm = this;
       this.$Service.materialList(this.getDataForm).then(function (res) {
         if (res.data.data !== undefined) {
-          vm.materialList = res.data.data;
+          vm.list = res.data.data;
         }
       });
     }

@@ -28,36 +28,32 @@
       </el-form>
     </div>
     <div class="margin-t-20">
-      <el-table :data="suppliesData.records" ref="multipleTable" class="w-100" @selection-change="handleSelectionChange">
+      <el-table :data="suppliesData" ref="multipleTable" class="w-100" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="typeName" label="物料类型"></el-table-column>
-        <el-table-column prop="storageNumber" label="仓库编号"></el-table-column>
-        <el-table-column prop="warehouseNumber" label="货架编号"></el-table-column>
-        <el-table-column prop="number" label="物料编号"></el-table-column>
-        <el-table-column prop="name" label="物料名称"></el-table-column>
-        <el-table-column prop="quantity" label="数量"></el-table-column>
-        <el-table-column prop="unitName" label="单位"></el-table-column>
-        <el-table-column label="有效期" width="290">
-          <template slot-scope="scope">{{scope.row.startTime}}&nbsp;&nbsp;至&nbsp;&nbsp;{{scope.row.endTime}}</template>
-        </el-table-column>
-        <el-table-column prop="safeTypeName" label="安全系数"></el-table-column>
-        <el-table-column prop="statusName" label="状态">
+        <el-table-column prop="materialTypeName" label="物料类型"></el-table-column>
+        <el-table-column prop="materialName" label="物料名称"></el-table-column>
+        <el-table-column prop="wareHouseNumber" label="仓库编号"></el-table-column>
+        <el-table-column prop="shelvesNumber" label="货架编号"></el-table-column>
+        <el-table-column prop="count" label="剩余数量"></el-table-column>
+        <el-table-column prop="unit" label="单位"></el-table-column>
+        <el-table-column prop="limitType" label="有效期限">
+          <!--有效期类型（1：限期 2：长期-->
           <template slot-scope="scope">
-            <el-tag size="small" v-if="scope.row.statusId === '0'" type="danger">{{scope.row.statusName}}</el-tag>
-            <el-tag size="small" v-if="scope.row.statusId === '1'" type="success">{{scope.row.statusName}}</el-tag>
-            <el-tag size="small" v-if="scope.row.statusId === '2'">{{scope.row.statusName}}</el-tag>
+            <span v-if="scope.row.limitType === 1">{{scope.row.limitTime}}</span>
+            <span v-if="scope.row.limitType === 2">长期</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" fixed="right" width="140">
+        <el-table-column label="操作" fixed="right" width="220">
           <template slot-scope="scope">
             <a href="javascript:void(0);" title="出库" class="remove f14" @click="outInOperation('out',scope.row)">出库</a>
             <a href="javascript:void(0);" title="入库" class="update f14" @click="outInOperation('in', scope.row)">入库</a>
+            <a href="javascript:void(0);" title="申请" class="update f14">申请</a>
           </template>
         </el-table-column>
       </el-table>
-      <div class="pages">
-        <el-pagination @current-change="handleCurrentChange" :current-page.sync="getSuppliesDataForm.current" :page-size="getSuppliesDataForm.size" layout="prev, pager, next, jumper" :total="totalPages"></el-pagination>
-      </div>
+<!--      <div class="pages">-->
+<!--        <el-pagination @current-change="handleCurrentChange" :current-page.sync="getSuppliesDataForm.current" :page-size="getSuppliesDataForm.size" layout="prev, pager, next, jumper" :total="totalPages"></el-pagination>-->
+<!--      </div>-->
     </div>
     <AddSupplies v-if="addSuppliessModal" @addSuppliesModalClose="addSuppliesModalClose" v-bind:passInfo="passInfo"></AddSupplies>
   </div>
@@ -75,21 +71,13 @@
       return {
         getSuppliesDataForm: {
           materialTypeId: '',
-          materialName: '',
-          status: '',
-          current: 0,
-          size: 10
+          materialName: ''
+          // status: '',
+          // current: 0,
+          // size: 10
         },
-        totalPages: 1,
-        suppliesData: {
-          current: 1,
-          orders: [],
-          pages: 1,
-          records: [],
-          searchCount: true,
-          size: 10,
-          total: 3
-        },
+        // totalPages: 1,
+        suppliesData: [],
         batchList: [],
         passInfo: {},
         addSuppliessModal: false
@@ -220,7 +208,7 @@
         this.$Service.supplies(this.getSuppliesDataForm).then(function (res) {
           if (res.data.data !== undefined) {
             vm.suppliesData = res.data.data;
-            vm.totalPages = vm.suppliesData.total;
+            // vm.totalPages = vm.suppliesData.total;
           }
         });
       },

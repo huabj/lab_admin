@@ -37,14 +37,15 @@ class GlobalService extends Vue {
       let vm = this;
       this.$axios(params)
         .then((res) => {
-          // console.log('[###接口请求的url###]');
-          // console.log('[url]', url);
-          // console.log('[###接口请求的参数###]');
-          // console.log('[headers]', params.headers);
-          // console.log('[method]', params.method);
-          // console.log('[data]', params.data);
-          // console.log('[###接口返回的结果###]');
-          // console.log(res.data);
+          console.log('[###接口请求的url###]');
+          console.log('[url]', url);
+          console.log('[###接口请求的参数###]');
+          console.log('[headers]', params.headers);
+          console.log('[method]', params.method);
+          console.log('[model]', model);
+          console.log('[data]', params.data);
+          console.log('[###接口返回的结果###]');
+          console.log(res.data);
           if (res.data.status === 1) {
             resolve(res);
           } else {

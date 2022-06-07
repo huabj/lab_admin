@@ -296,8 +296,8 @@ class Service extends GlobalService {
     return this.GET(Config.POST_URL + '/api/laboratory/list');
   }
   // 仓库管理初始化查询，条件查询（物料类型、物料名称）
-  materialList () {
-    return this.GET(Config.POST_URL + '/api/material');
+  materialList (form) {
+    return this.GET(Config.POST_URL + '/api/material', form);
   }
   // 物料类型下拉框查询
   materialTypeList () {
@@ -330,6 +330,18 @@ class Service extends GlobalService {
   // 物料数据导出
   downloadMaterialData () {
     return this.GET(Config.POST_URL + '/api/material/downloadMaterialData');
+  }
+  // 入库统计初始化查询，条件查询（物料类型、物料名称）
+  materialInventoryInputList (addForm) {
+    return this.GET(Config.POST_URL + '/api/materialInventoryInput', addForm);
+  }
+  // 出库统计初始化查询，条件查询（物料类型、物料名
+  materialInventoryOutputList (addForm) {
+    return this.GET(Config.POST_URL + '/api/materialInventoryOutput', addForm);
+  }
+  // 出库统计初始化查询，条件查询（物料类型、物料名
+  materialInventoryApplyList (addForm) {
+    return this.GET(Config.POST_URL + '/api/materialInventoryApply', addForm);
   }
 }
 export default Service.getInstance();
