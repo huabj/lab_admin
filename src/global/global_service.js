@@ -42,7 +42,6 @@ class GlobalService extends Vue {
           console.log('[###接口请求的参数###]');
           console.log('[headers]', params.headers);
           console.log('[method]', params.method);
-          console.log('[model]', model);
           console.log('[data]', params.data);
           console.log('[###接口返回的结果###]');
           console.log(res.data);

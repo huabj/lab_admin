@@ -36,21 +36,44 @@
         <el-table-column prop="unit" label="单位"></el-table-column>
         <el-table-column prop="createName" label="申请人"></el-table-column>
         <el-table-column prop="receiveTime" label="待领取时间"></el-table-column>
-        <el-table-column prop="receiveStatus" label="领取状态"></el-table-column>
-        <el-table-column prop="status" label="状态"></el-table-column>
-        <el-table-column label="操作" fixed="right" width="80">
+        <el-table-column prop="receiveStatus" label="领取状态">
           <template slot-scope="scope">
-            <a href="javascript:void(0);" title="删除" class="delete f14" @click="batchOperate('delete', scope.row)">删除</a>
+            <!--领取状态（1：待领取 2：已领取）-->
+            <el-tag size="small" v-if="scope.row.receiveStatus === 1" type="success">待领取</el-tag>
+            <el-tag size="small" v-if="scope.row.receiveStatus === 2" type="danger">已领取</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="详情"></el-table-column>
+        <el-table-column prop="returnStatus" label="状态">
+          <template slot-scope="scope">
+            <!--归还状态（1：无<默认> 2：无需归还 3：未领取 4：待归还 5：未归还 6：部分归还 7：全部归还）-->
+            <!--<el-tag size="small" v-if="scope.row.returnStatus === 1" type="success">无</el-tag>-->
+            <el-tag size="small" v-if="scope.row.returnStatus === 2" type="success">无需归还</el-tag>
+            <el-tag size="small" v-if="scope.row.returnStatus === 3" type="danger">未领取</el-tag>
+            <el-tag size="small" v-if="scope.row.returnStatus === 4" type="danger">待归还</el-tag>
+            <el-tag size="small" v-if="scope.row.returnStatus === 5" type="danger">未归还</el-tag>
+            <el-tag size="small" v-if="scope.row.returnStatus === 6" type="danger">部分归还</el-tag>
+            <el-tag size="small" v-if="scope.row.returnStatus === 7" type="success">全部归还</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="140">
+          <template slot-scope="scope">
+            <a href="javascript:void(0);" title="退回" class="remove f14" @click="batchOperate('back', scope.row)"  v-if="scope.row.receiveStatus === 1">退回</a>
+            <a href="javascript:void(0);" title="归还" class="update f14" @click="batchOperate('return', scope.row)" v-if="scope.row.receiveStatus === 2">归还</a>
+          </template>
+        </el-table-column>
+        <el-table-column label="详情" width="80">
+          <template slot-scope="scope">
+            <a href="javascript:void(0);" title="查看" class="export f14">查看</a>
+<!--            <a href="javascript:void(0);" title="删除" class="delete f14" @click="batchOperate('delete', scope.row)">删除</a>-->
+          </template>
+        </el-table-column>
       </el-table>
       <!--        <div class="pages">-->
       <!--          <el-pagination @current-change="handleCurrentChange" :current-page.sync="labRecordForm.current" :page-size="labRecordForm.size" layout="prev, pager, next, jumper" :total="totalPages"></el-pagination>-->
       <!--        </div>-->
       <img src="../../../assets/img/rt.png" class="triangle">
     </div>
-    <ApplicationMaterials v-if="applicationMaterialsModal" @applicationMaterialsModalClose="applicationMaterialsModalClose"></ApplicationMaterials>
+    <ApplicationMaterials v-if="applicationMaterialsModal" @applicationMaterialsModalClose="applicationMaterialsModalClose" v-bind:passInfo="passInfo"></ApplicationMaterials>
   </div>
 </template>
 
@@ -71,7 +94,8 @@
         totalPages: 1,
         applicationRecordData: [],
         batchList: [],
-        applicationMaterialsModal: false
+        applicationMaterialsModal: false,
+        passInfo: {}
       };
     },
     computed: {
@@ -94,39 +118,36 @@
       applicationMaterialsModalShow () {
         this.applicationMaterialsModal = true;
       },
-      applicationMaterialsModalClose () {
+      applicationMaterialsModalClose (sign) {
         this.applicationMaterialsModal = false;
+        if (sign === 'add') {
+          this.getLabRecord();
+        }
       },
-      batchOperate (sign) {
-        if (sign === 'delete') {
-          if (this.batchList.length <= 0) {
-            this.$alert('请选择您要删除的数据！', '温馨提示', {
-              confirmButtonText: '确定',
-              callback: action => {
-              }
-            });
-          } else {
-            this.$confirm('是否确认删除?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-            }).then(() => {
-            }).catch(() => {
-            });
-          }
-        } else if (sign === 'export') {
-          this.$confirm('是否确认导出?', '提示', {
+      batchOperate (sign, row) {
+        if (sign === 'back') {
+          this.$confirm('是否确认退回吗？', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            window.location.href = this.$Config.POST_URL + '/file/安全模块档案.xlsx';
-            this.$message({
-              message: '导出成功',
-              type: 'success'
+            let vm = this;
+            let form = {
+            };
+            this.$Service.materialInventoryReturn(form).then(function (res) {
+              if (res.data.data !== undefined) {
+                vm.$message({
+                  message: '操作成功',
+                  type: 'success'
+                });
+                vm.getLabRecord();
+              }
             });
           }).catch(() => {
           });
+        } else if (sign === 'return') {
+          this.passInfo = row;
+          this.applicationMaterialsModalShow();
         }
       },
       handleSelectionChange (val) {

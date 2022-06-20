@@ -343,5 +343,13 @@ class Service extends GlobalService {
   materialInventoryApplyList (addForm) {
     return this.GET(Config.POST_URL + '/api/materialInventoryApply', addForm);
   }
+  // 入库 出库 申请
+  materialInventoryMessage (addForm) {
+    return this.POST(Config.POST_URL + '/api/materialInventoryMessage', addForm);
+  }
+  // 申请档案退回归还
+  materialInventoryReturn (addForm) {
+    return this.POST(Config.POST_URL + '/api/materialInventoryReturn', addForm);
+  }
 }
 export default Service.getInstance();

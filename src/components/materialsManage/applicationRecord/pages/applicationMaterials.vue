@@ -3,46 +3,43 @@
     <div class="modal-bg">
       <div class="modal w-50" :style="{'max-height': (screenHeight - 180) + 'px'}">
         <div class="modal-header">
-          <span class="f16 f-bolder">物料申请</span>
+          <span class="f16 f-bolder">物料归还</span>
           <i class="el-icon-close f24 f-bolder" @click="cancelModal('cancel')"></i>
         </div>
-        <div class="modal-body" v-for="(itemF, index) in formList" :key="itemF.id" style="background: #ecf5ff; padding: 20px 20px 0 0;">
-          <div class="text-r" v-if="index !== 0"><el-button type="danger" @click="delMaterials(index)" size="small">删除</el-button></div>
-          <el-form label-width="100px" class="margin-t-20">
-            <el-form-item label="类型" class="w-50" prop="type" size="small">
-              <el-select v-model="itemF.type" placeholder="请选择">
-                <el-option v-for="item in typeList" :key="item.id" :label="item.name" :value="item.name"></el-option>
+        <div class="modal-body">
+          <el-form label-width="100px" class="margin-t-20" ref="form" :model="form" :rules="rules">
+              <el-form-item label="物料类型" class="w-100">
+                <el-input placeholder="请输入物料类型" size="small" v-model="form.materialTypeName"></el-input>
+              </el-form-item>
+            <el-form-item label="物料名称" class="w-100">
+              <el-input placeholder="请输入物料名称" size="small" v-model="form.materialName"></el-input>
+            </el-form-item>
+            <el-form-item label="仓库编号" class="w-100">
+              <el-input placeholder="请输入仓库编号" size="small" v-model="form.wareHouseNumber"></el-input>
+            </el-form-item>
+            <el-form-item label="货架编号" class="w-100">
+              <el-input placeholder="请输入货架编号" size="small" v-model="form.shelvesNumber"></el-input>
+            </el-form-item>
+            <el-form-item label="申请数量" class="w-50">
+              <el-input placeholder="请输入申请数量" size="small" v-model="form.applyCount"></el-input>
+            </el-form-item>
+            <el-form-item label="单位" class="w-50">
+              <el-input placeholder="请输入单位" size="small" v-model="form.unit"></el-input>
+            </el-form-item>
+            <!--归还类型（1:正常 2:损坏 3:丢失 4：待修复 5：报废 ）-->
+            <el-form-item label="归还类型" class="w-50" prop="type" size="small">
+              <el-select v-model="form.receiveStatus" placeholder="请选择">
+                <el-option v-for="item in typeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="物品名称" class="w-50" prop="goodsName" size="small">
-              <el-select v-model="itemF.goodsName" placeholder="请选择" v-if="itemF.type === '教具'">
-                <el-option v-for="item in goodsList1" :key="item.id" :label="item.name" :value="item.name"></el-option>
-              </el-select>
-              <el-select v-model="itemF.goodsName" placeholder="请选择" v-if="itemF.type === '消耗品'">
-                <el-option v-for="item in goodsList2" :key="item.id" :label="item.name" :value="item.name"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="数量" class="w-50"  prop="quantity">
-              <el-input-number v-model="itemF.quantity" size="small" controls-position="right" :min="1"></el-input-number>
-            </el-form-item>
-            <span class="f14 warn" style="display: inline-block; margin: 10px 0 0 20px;">（*当前可申请数量 50）</span>
-            <el-form-item label="用途" class="w-50" prop="purpose" size="small">
-              <el-select v-model="itemF.purpose" placeholder="请选择">
-                <el-option v-for="item in purposeList" :key="item.id" :label="item.name" :value="item.name"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="教室名称" class="w-50" v-if="itemF.purpose === '教学'">
-              <el-input placeholder="请输入教室名称" size="small"></el-input>
-            </el-form-item>
-            <el-form-item label="领取日期" class="w-50" prop="time" size="small">
-              <el-date-picker type="date" placeholder="选择日期" v-model="itemF.time" format="yyyy-MM-dd" value-format="yyyy-MM-dd"></el-date-picker>
+            <el-form-item prop="returnCount" label="归还数量" class="w-50">
+              <el-input placeholder="请输入归还数量" size="small" v-model="form.returnCount"></el-input>
             </el-form-item>
           </el-form>
         </div>
         <div class="modal-foot">
           <el-button size="small" @click="cancelModal('cancel')">取消</el-button>
-          <el-button type="primary" @click="cancelModal()" size="small">确定</el-button>
-          <el-button type="warning" @click="addMaterials()" size="small">添加</el-button>
+          <el-button type="primary" @click="submit('form')" size="small">确定</el-button>
         </div>
       </div>
     </div>
@@ -55,81 +52,72 @@
     name: 'applicationMaterials',
     data () {
       return {
-        purposeList: [
-          {
-            name: '教学'
-          },
-          {
-            name: '其他'
-          }
-        ],
+        // 归还类型（1:正常 2:损坏 3:丢失 4：待修复 5：报废 ）
         typeList: [
           {
-            name: '教具'
+            id: 1,
+            name: '正常'
           },
           {
-            name: '消耗品'
+            id: 2,
+            name: '损坏'
+          },
+          {
+            id: 3,
+            name: '丢失'
+          },
+          {
+            id: 4,
+            name: '待修复'
+          },
+          {
+            id: 5,
+            name: '报废'
           }
         ],
-        goodsList1: [
-          {
-            name: '直尺'
-          },
-          {
-            name: '卷尺'
-          },
-          {
-            name: '游标卡尺'
-          },
-          {
-            name: '拐尺'
-          }
-        ],
-        goodsList2: [
-          {
-            name: '手套'
-          },
-          {
-            name: '粉笔'
-          },
-          {
-            name: '护目镜'
-          },
-          {
-            name: '焊丝'
-          }
-        ],
-        formList: [
-          {
-            type: '教具',
-            goodsName: '',
-            quantity: '',
-            purpose: '',
-            time: ''
-          }
-        ]
+        form: {
+          materialInventoryApplyId: '',
+          receiveStatus: '',
+          returnCount: ''
+        },
+        rules: {
+          returnCount: [
+            {required: true, message: '请输入归还数量', trigger: 'blur'}
+          ]
+        }
       };
     },
+    props: [
+      'passInfo'
+    ],
     computed: {
       ...mapState([
         'screenHeight'
       ])
     },
     created () {
+      this.form = {...this.form, ...this.passInfo};
+      console.log(this.form);
     },
     methods: {
-      addMaterials () {
-        let item = {
-          type: '教具',
-          goodsName: '',
-          quantity: '',
-          purpose: '',
-          time: ''
-        };
-        this.formList.push(item);
-      },
-      delMaterials (index) {
-        this.formList.splice(index, 1);
+      submit (form) {
+        this.$refs[form].validate((valid) => {
+          if (valid) {
+            let vm = this;
+            this.form.materialInventoryApplyId = this.form.id;
+            this.$Service.materialInventoryReturn(this.form).then(function (res) {
+              if (res.data.data !== undefined) {
+                vm.$message({
+                  message: '操作成功',
+                  type: 'success'
+                });
+                vm.cancelModal('add');
+              }
+            });
+          } else {
+            return false;
+          }
+        });
       },
       cancelModal (sign) {
         this.$emit('applicationMaterialsModalClose', sign);

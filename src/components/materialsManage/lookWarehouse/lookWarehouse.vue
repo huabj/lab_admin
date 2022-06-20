@@ -7,7 +7,7 @@
 <!--        <el-button type="primary" plain size="small" @click="addSuppliesModalShow('add')">添加</el-button>-->
 <!--        <el-button type="primary" plain size="small" @click="addSuppliesModalShow('updata')">编辑</el-button>-->
 <!--        <el-button type="primary" plain size="small" @click="batchOperate('delete')">删除</el-button>-->
-        <el-button type="primary" size="small" @click="batchOperate('export')">导入</el-button>
+        <el-button type="primary" size="small" @click="importModalShow">导入</el-button>
         <el-button type="primary" size="small" @click="batchOperate('export')">导出</el-button>
       </div>
       <div class="clearfix"></div>
@@ -45,9 +45,9 @@
         </el-table-column>
         <el-table-column label="操作" fixed="right" width="220">
           <template slot-scope="scope">
-            <a href="javascript:void(0);" title="出库" class="remove f14" @click="outInOperation('out',scope.row)">出库</a>
-            <a href="javascript:void(0);" title="入库" class="update f14" @click="outInOperation('in', scope.row)">入库</a>
-            <a href="javascript:void(0);" title="申请" class="update f14">申请</a>
+            <a href="javascript:void(0);" title="出库" class="remove f14" @click="operate('out',scope.row)">出库</a>
+            <a href="javascript:void(0);" title="入库" class="update f14" @click="operate('in', scope.row)">入库</a>
+            <a href="javascript:void(0);" title="申请" class="update f14" @click="operate('apply', scope.row)">申请</a>
           </template>
         </el-table-column>
       </el-table>
@@ -56,16 +56,19 @@
 <!--      </div>-->
     </div>
     <AddSupplies v-if="addSuppliessModal" @addSuppliesModalClose="addSuppliesModalClose" v-bind:passInfo="passInfo"></AddSupplies>
+    <ImportModal v-if="importModal" @importModalClose="importModalClose" v-bind:passInfo="passInfo"></ImportModal>
   </div>
 </template>
 
 <script>
   import {mapState} from 'vuex';
   import AddSupplies from './pages/addSupplies.vue';
+  import ImportModal from './pages/import.vue';
   export default {
     name: 'lookWarehouse',
     components: {
-      AddSupplies
+      AddSupplies,
+      ImportModal
     },
     data () {
       return {
@@ -80,7 +83,8 @@
         suppliesData: [],
         batchList: [],
         passInfo: {},
-        addSuppliessModal: false
+        addSuppliessModal: false,
+        importModal: false
       };
     },
     computed: {
@@ -96,6 +100,16 @@
       this.getSuppliesData();
     },
     methods: {
+      // importModalShow
+      importModalShow () {
+        this.importModal = true;
+      },
+      importModalClose (sign) {
+        this.importModal = false;
+      },
+      operate (sign, row) {
+        this.addSuppliesModalShow(sign, row);
+      },
       // 出入库操作
       outInOperation (sign, row) {
         let item = {
@@ -170,24 +184,13 @@
         });
       },
       // 模态框显示
-      addSuppliesModalShow (sign) {
-        if (sign === 'updata') {
-          if (this.batchList.length !== 1) {
-            this.$alert('亲，请勾选一条数据进行编辑哟！', '温馨提示', {
-              confirmButtonText: '确定',
-              callback: action => {
-              }
-            });
-          } else {
-            let data = {
-              row: this.batchList[0]
-            };
-            this.passInfo = data;
-            this.addSuppliessModal = true;
-          }
-        } else if (sign === 'add') {
-          this.addSuppliessModal = true;
-        }
+      addSuppliesModalShow (sign, row) {
+        let data = {
+          row: row,
+          sign: sign
+        };
+        this.passInfo = data;
+        this.addSuppliessModal = true;
       },
       // 模态框关闭
       addSuppliesModalClose (sign) {

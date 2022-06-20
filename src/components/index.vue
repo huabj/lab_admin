@@ -4,7 +4,7 @@
     <el-header>
       <div class="header-main w-90">
         <!--logo开始-->
-        <div class="logo">校园数字化系统</div>
+<!--        <div class="logo">校园数字化系统</div>-->
         <!--logo结束-->
         <!--用户信息开始-->
         <div class="user-s">

@@ -141,7 +141,6 @@ body { background: #f5f6fa; font-size: 12px; overflow-x: hidden; color: #333333;
 .cell a { display: inline-block; font-size: 12px; border-radius: 5px; padding: 0 10px; margin: 0 2px; color: #fff; }
 .cell a.update { border: 1px solid #409EFF; color: #409EFF; }
 .cell a.remove { border: 1px solid #f00; color: #f00; }
-.cell a.update { border: 1px solid #409EFF; color: #409EFF; }
 .cell a.export { color: #409EFF; text-decoration: underline; }
 .cell a.delete { color: #f00; text-decoration: underline; }
 /*loadWait*/
