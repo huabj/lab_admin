@@ -64,9 +64,9 @@
         </el-table-column>
         <el-table-column label="操作" width="180">
           <template slot-scope="scope">
-            <a href="javascript:void(0);" title="编辑" class="remove f14" @click="addMaterialModalShow(scope.row, 'edit')">编辑</a>
-            <a href="javascript:void(0);" title="禁用" class="update f14" v-if="scope.row.status === 0" @click="changeMaterialStatus(scope.row, '禁用')">禁用</a>
-            <a href="javascript:void(0);" title="取消禁用" class="update f14" v-if="scope.row.status === 1" @click="changeMaterialStatus(scope.row, '取消禁用')">取消禁用</a>
+            <a href="javascript:void(0);" title="编辑" class="update f14" @click="addMaterialModalShow(scope.row, 'edit')">编辑</a>
+            <a href="javascript:void(0);" title="禁用" class="remove f14" v-if="scope.row.status === 0" @click="changeMaterialStatus(scope.row, '禁用')">禁用</a>
+            <a href="javascript:void(0);" title="取消禁用" class="remove f14" v-if="scope.row.status === 1" @click="changeMaterialStatus(scope.row, '取消禁用')">取消禁用</a>
           </template>
         </el-table-column>
       </el-table>

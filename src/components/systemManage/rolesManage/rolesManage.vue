@@ -157,13 +157,13 @@
       },
       // 角色菜单修改提交
       updateRolesMenusSave (arrayFrom) {
-        if (this.addRolesForm.id === 1) {
-          this.$alert('亲不能随意更改超级管理员的权限呦！', '温馨提示', {
-            confirmButtonText: '确定',
-            callback: action => {
-            }
-          });
-        } else {
+        // if (this.addRolesForm.id === 1) {
+        //   this.$alert('亲不能随意更改超级管理员的权限呦！', '温馨提示', {
+        //     confirmButtonText: '确定',
+        //     callback: action => {
+        //     }
+        //   });
+        // } else {
           let vm = this;
           this.addRolesForm.menus = [];
           for (let i = 0; i < arrayFrom.length; i++) {
@@ -179,7 +179,7 @@
             });
             vm.getRolesData();
           });
-        }
+        // }
       },
       // 获取菜单列表
       getMenesList () {

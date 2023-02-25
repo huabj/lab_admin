@@ -63,8 +63,7 @@
         </el-table-column>
         <el-table-column label="详情" width="80">
           <template slot-scope="scope">
-            <a href="javascript:void(0);" title="查看" class="export f14">查看</a>
-<!--            <a href="javascript:void(0);" title="删除" class="delete f14" @click="batchOperate('delete', scope.row)">删除</a>-->
+            <a href="javascript:void(0);" title="查看" class="export f14" @click="detailModalShow(scope.row)">查看</a>
           </template>
         </el-table-column>
       </el-table>
@@ -74,16 +73,19 @@
       <img src="../../../assets/img/rt.png" class="triangle">
     </div>
     <ApplicationMaterials v-if="applicationMaterialsModal" @applicationMaterialsModalClose="applicationMaterialsModalClose" v-bind:passInfo="passInfo"></ApplicationMaterials>
+    <DetailModal v-if="detailModal" @detailModalClose="detailModalClose" v-bind:passInfo="passInfo"></DetailModal>
   </div>
 </template>
 
 <script>
   import ApplicationMaterials from './pages/applicationMaterials.vue';
+  import DetailModal from './pages/detailModal.vue';
   import {mapState} from 'vuex';
   export default {
     name: 'applicationRecord',
     components: {
-      ApplicationMaterials
+      ApplicationMaterials,
+      DetailModal
     },
     data () {
       return {
@@ -95,6 +97,7 @@
         applicationRecordData: [],
         batchList: [],
         applicationMaterialsModal: false,
+        detailModal: false,
         passInfo: {}
       };
     },
@@ -107,6 +110,14 @@
       this.getLabRecord();
     },
     methods: {
+      detailModalShow (row) {
+        this.detailModal = true;
+        this.passInfo = row;
+      },
+      detailModalClose () {
+        this.detailModal = false;
+        this.passInfo = {};
+      },
       getLabRecord () {
         let vm = this;
         this.$Service.materialInventoryApplyList(this.getDataForm).then(function (res) {
@@ -133,6 +144,7 @@
           }).then(() => {
             let vm = this;
             let form = {
+              materialInventoryApplyId: row.id
             };
             this.$Service.materialInventoryReturn(form).then(function (res) {
               if (res.data.data !== undefined) {

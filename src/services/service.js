@@ -349,7 +349,7 @@ class Service extends GlobalService {
   }
   // 申请档案退回归还
   materialInventoryReturn (addForm) {
-    return this.POST(Config.POST_URL + '/api/materialInventoryReturn', addForm);
+    return this.POST(Config.POST_URL + '/api/materialInventoryReturn/back', addForm);
   }
 }
 export default Service.getInstance();

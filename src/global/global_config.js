@@ -1,7 +1,7 @@
 let DEV = {
-  POST_URL_VALUE: 'http://81.69.23.171:9966',
+  POST_URL_VALUE: 'http://82.156.25.167:9966',
   PC: {
-    WEB_URL_VALUE: 'http://81.69.23.171:9967'
+    WEB_URL_VALUE: 'http://82.156.25.167:9967'
   }
 };
 
