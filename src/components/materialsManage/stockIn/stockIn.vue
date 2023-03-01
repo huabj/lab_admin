@@ -154,7 +154,7 @@ import {mapState} from 'vuex';
         data['ids'] = batchList;
         let vm = this;
         this.$axios({
-          url: this.$Config.POST_URL + '/api/supplies/download',
+          url: this.$Config.POST_URL + '/api/materialInventoryInput/downloadMaterialInventoryInputData',
           method: 'get',
           headers: {'Authorization': this.getCookieVal('token')},
           params: data,

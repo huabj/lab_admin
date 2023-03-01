@@ -136,6 +136,7 @@
         }
       },
       batchOperate (sign, row) {
+        console.log(sign, row);
         if (sign === 'back') {
           this.$confirm('是否确认退回吗？', '提示', {
             confirmButtonText: '确定',
@@ -160,10 +161,73 @@
         } else if (sign === 'return') {
           this.passInfo = row;
           this.applicationMaterialsModalShow();
+        } else if (sign === 'export') {
+          if (row === undefined) {
+            if (this.batchList.length <= 0) {
+              this.$alert('请选择您要导出的数据！', '温馨提示', {
+                confirmButtonText: '确定',
+                callback: action => {
+                }
+              });
+            } else {
+              this.$confirm('是否确认导出?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                let batchList = [];
+                for (let i = 0; i < this.batchList.length; i++) {
+                  batchList.push(this.batchList[i].id);
+                }
+                this.export(batchList);
+              }).catch(() => {
+              });
+            }
+          } else {
+            this.$confirm('是否确认导出?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              let batchList = [];
+              batchList.push(row.id);
+              this.export(batchList);
+            }).catch(() => {
+            });
+          }
         }
       },
       handleSelectionChange (val) {
         this.batchList = val;
+      },
+      // 导出方法
+      export (batchList) {
+        let data = {};
+        data['ids'] = batchList;
+        let vm = this;
+        this.$axios({
+          url: this.$Config.POST_URL + '/api/materialInventoryApply/downloadMaterialInventoryApplyData',
+          method: 'get',
+          headers: {'Authorization': this.getCookieVal('token')},
+          params: data,
+          responseType: 'blob'
+        }).then(function (res) {
+          let blob = new Blob([res.data], { type: 'application/vnd.ms-excel' });
+          let url = window.URL.createObjectURL(blob);
+          let filename = '申请档案';
+          let link = document.createElement('a');
+          link.style.display = 'none';
+          link.href = url;
+          link.setAttribute('download', filename + '.xls');
+          document.body.appendChild(link);
+          link.click();
+          vm.$message({
+            message: '导出成功',
+            type: 'success'
+          });
+        }).catch(function (error) {
+          console.log(error);
+        });
       }
     }
   };
