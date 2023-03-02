@@ -277,14 +277,12 @@
       },
       // 导出方法
       export (batchList) {
-        let data = {};
-        data['ids'] = batchList;
         let vm = this;
         this.$axios({
-          url: this.$Config.POST_URL + '/api/supplies/download',
-          method: 'get',
+          url: this.$Config.POST_URL + '/api/materialInventoryMessage/downloadMaterialInventoryMessageData',
+          method: 'post',
           headers: {'Authorization': this.getCookieVal('token')},
-          params: data,
+          data: batchList,
           responseType: 'blob'
         }).then(function (res) {
           let blob = new Blob([res.data], { type: 'application/vnd.ms-excel' });

@@ -136,7 +136,6 @@
         }
       },
       batchOperate (sign, row) {
-        console.log(sign, row);
         if (sign === 'back') {
           this.$confirm('是否确认退回吗？', '提示', {
             confirmButtonText: '确定',
@@ -202,14 +201,12 @@
       },
       // 导出方法
       export (batchList) {
-        let data = {};
-        data['ids'] = batchList;
         let vm = this;
         this.$axios({
           url: this.$Config.POST_URL + '/api/materialInventoryApply/downloadMaterialInventoryApplyData',
-          method: 'get',
+          method: 'post',
           headers: {'Authorization': this.getCookieVal('token')},
-          params: data,
+          data: batchList,
           responseType: 'blob'
         }).then(function (res) {
           let blob = new Blob([res.data], { type: 'application/vnd.ms-excel' });

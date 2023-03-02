@@ -126,40 +126,35 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // let removeList = [];
-        // removeList.push(this.labEquFaultDetail.id);
-        // this.importEqu(removeList);
+        this.importEqu();
       }).catch(() => {
       });
     },
     // 导出方法
-    importEqu (removeList) {
-      // let data = {};
-      // data['ids'] = removeList;
-      // let vm = this;
-      // this.$axios({
-      //   url: this.$Config.POST_URL + '/api/laboratory/equipment_fault/download',
-      //   method: 'get',
-      //   headers: {'Authorization': this.getCookieVal('token')},
-      //   params: data,
-      //   responseType: 'blob'
-      // }).then(function (res) {
-      //   let blob = new Blob([res.data], { type: 'application/vnd.ms-excel' });
-      //   let url = window.URL.createObjectURL(blob);
-      //   let filename = '故障信息';
-      //   let link = document.createElement('a');
-      //   link.style.display = 'none';
-      //   link.href = url;
-      //   link.setAttribute('download', filename + '.xls');
-      //   document.body.appendChild(link);
-      //   link.click();
-      //   vm.$message({
-      //     message: '导出成功',
-      //     type: 'success'
-      //   });
-      // }).catch(function (error) {
-      //   console.log(error);
-      // });
+    importEqu () {
+      let vm = this;
+      this.$axios({
+        url: this.$Config.POST_URL + '/api/material/downloadMaterialData',
+        method: 'post',
+        headers: {'Authorization': this.getCookieVal('token')},
+        responseType: 'blob'
+      }).then(function (res) {
+        let blob = new Blob([res.data], { type: 'application/vnd.ms-excel' });
+        let url = window.URL.createObjectURL(blob);
+        let filename = '物料信息';
+        let link = document.createElement('a');
+        link.style.display = 'none';
+        link.href = url;
+        link.setAttribute('download', filename + '.xls');
+        document.body.appendChild(link);
+        link.click();
+        vm.$message({
+          message: '导出成功',
+          type: 'success'
+        });
+      }).catch(function (error) {
+        console.log(error);
+      });
     },
     // 下载模板
     download () {

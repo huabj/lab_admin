@@ -150,19 +150,17 @@ import {mapState} from 'vuex';
       },
       // 导出方法
       export (batchList) {
-        let data = {};
-        data['ids'] = batchList;
         let vm = this;
         this.$axios({
           url: this.$Config.POST_URL + '/api/materialInventoryInput/downloadMaterialInventoryInputData',
-          method: 'get',
+          method: 'post',
           headers: {'Authorization': this.getCookieVal('token')},
-          params: data,
+          data: batchList,
           responseType: 'blob'
         }).then(function (res) {
           let blob = new Blob([res.data], { type: 'application/vnd.ms-excel' });
           let url = window.URL.createObjectURL(blob);
-          let filename = '物料信息';
+          let filename = '入库统计信息';
           let link = document.createElement('a');
           link.style.display = 'none';
           link.href = url;
